@@ -1,0 +1,41 @@
+sku_id,sku_name,category,list_price,unit_cogs
+OND-SER-01,Sérum Vitamina C 30ml,Sérum,129.0,29.23
+OND-SER-02,Sérum Niacinamida 10%,Sérum,99.0,19.23
+OND-SER-03,Sérum Ácido Hialurônico,Sérum,119.0,24.16
+OND-SER-04,"Sérum Retinol 0,3%",Sérum,149.0,30.15
+OND-SER-05,Sérum Peptídeos,Sérum,169.0,31.09
+OND-SER-06,Sérum Clareador,Sérum,139.0,28.27
+OND-SER-07,Sérum Antioleosidade,Sérum,89.0,18.42
+OND-SER-08,Sérum Noturno Renovador,Sérum,159.0,38.8
+OND-SOL-01,Protetor FPS 50 Toque Seco,Protetor solar,79.0,20.44
+OND-SOL-02,Protetor FPS 60 com Cor,Protetor solar,89.0,25.22
+OND-SOL-03,Protetor FPS 30 Bastão,Protetor solar,69.0,18.83
+OND-SOL-04,Protetor FPS 50 Infantil,Protetor solar,74.0,20.01
+OND-SOL-05,Fluido FPS 70,Protetor solar,99.0,28.3
+OND-SOL-06,Spray FPS 50,Protetor solar,84.0,23.52
+OND-SOL-07,Protetor Corporal FPS 50 200ml,Protetor solar,64.0,15.44
+OND-HID-01,Gel-Creme Hidratante,Hidratante,89.0,18.93
+OND-HID-02,Creme Barreira,Hidratante,109.0,24.39
+OND-HID-03,Hidratante Facial Noturno,Hidratante,119.0,26.63
+OND-HID-04,Hidratante Corporal 400ml,Hidratante,59.0,13.59
+OND-HID-05,Creme de Mãos,Hidratante,39.0,7.47
+OND-HID-06,Hidratante Labial,Hidratante,29.0,7.31
+OND-HID-07,Creme Área dos Olhos,Hidratante,99.0,22.19
+OND-LIM-01,Gel de Limpeza 300ml,Limpeza,59.0,15.75
+OND-LIM-02,Água Micelar 400ml,Limpeza,49.0,14.4
+OND-LIM-03,Espuma de Limpeza,Limpeza,54.0,15.35
+OND-LIM-04,Óleo Demaquilante,Limpeza,79.0,25.34
+OND-LIM-05,Esfoliante Facial,Limpeza,64.0,19.01
+OND-LIM-06,Sabonete Facial em Barra,Limpeza,29.0,9.08
+OND-KIT-01,Kit Rotina Básica,Kits,239.0,64.0
+OND-KIT-02,Kit Vitamina C,Kits,279.0,88.87
+OND-KIT-03,Kit Verão,Kits,219.0,69.17
+OND-KIT-04,Kit Anti-idade,Kits,329.0,102.57
+OND-KIT-05,Kit Viagem,Kits,149.0,46.4
+OND-KIT-06,Kit Presente,Kits,199.0,61.71
+OND-CRP-01,Óleo Corporal,Corpo,89.0,25.32
+OND-CRP-02,Loção Firmadora,Corpo,99.0,26.2
+OND-CRP-03,Desodorante Natural,Corpo,34.0,8.09
+OND-CRP-04,Esfoliante Corporal,Corpo,69.0,20.44
+OND-CRP-05,Body Splash,Corpo,79.0,20.17
+OND-CRP-06,Creme para os Pés,Corpo,44.0,10.83

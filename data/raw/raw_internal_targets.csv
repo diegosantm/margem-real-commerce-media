@@ -1,0 +1,161 @@
+channel,sku_id,target_metric,target_value,target_source
+tiktok_shop,OND-SER-01,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-01,acos,0.2,Meta interna do time
+shopee,OND-SER-01,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-SER-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-02,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-02,acos,0.2,Meta interna do time
+shopee,OND-SER-02,roas,6.1,GMV Max Custom ROAS
+amazon,OND-SER-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-03,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-03,acos,0.2,Meta interna do time
+shopee,OND-SER-03,roas,6.6,GMV Max Custom ROAS
+amazon,OND-SER-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-04,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-04,acos,0.2,Meta interna do time
+shopee,OND-SER-04,roas,6.5,GMV Max Custom ROAS
+amazon,OND-SER-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-05,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-05,acos,0.2,Meta interna do time
+shopee,OND-SER-05,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-SER-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-06,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-06,acos,0.2,Meta interna do time
+shopee,OND-SER-06,roas,6.6,GMV Max Custom ROAS
+amazon,OND-SER-06,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-07,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-07,acos,0.2,Meta interna do time
+shopee,OND-SER-07,roas,5.2,GMV Max Custom ROAS
+amazon,OND-SER-07,acos,0.22,Meta interna do time
+tiktok_shop,OND-SER-08,roas,5.0,GMV Max Target ROI (campanha)
+mercado_livre,OND-SER-08,acos,0.2,Meta interna do time
+shopee,OND-SER-08,roas,6.3,GMV Max Custom ROAS
+amazon,OND-SER-08,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-01,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-01,acos,0.2,Meta interna do time
+shopee,OND-SOL-01,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-SOL-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-02,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-02,acos,0.2,Meta interna do time
+shopee,OND-SOL-02,roas,6.7,GMV Max Custom ROAS
+amazon,OND-SOL-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-03,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-03,acos,0.2,Meta interna do time
+shopee,OND-SOL-03,roas,4.5,GMV Max Custom ROAS
+amazon,OND-SOL-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-04,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-04,acos,0.2,Meta interna do time
+shopee,OND-SOL-04,roas,5.4,GMV Max Custom ROAS
+amazon,OND-SOL-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-05,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-05,acos,0.2,Meta interna do time
+shopee,OND-SOL-05,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-SOL-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-06,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-06,acos,0.2,Meta interna do time
+shopee,OND-SOL-06,roas,6.4,GMV Max Custom ROAS
+amazon,OND-SOL-06,acos,0.22,Meta interna do time
+tiktok_shop,OND-SOL-07,roas,5.5,GMV Max Target ROI (campanha)
+mercado_livre,OND-SOL-07,acos,0.2,Meta interna do time
+shopee,OND-SOL-07,roas,6.1,GMV Max Custom ROAS
+amazon,OND-SOL-07,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-01,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-01,acos,0.2,Meta interna do time
+shopee,OND-HID-01,roas,4.8,GMV Max Custom ROAS
+amazon,OND-HID-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-02,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-02,acos,0.2,Meta interna do time
+shopee,OND-HID-02,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-HID-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-03,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-03,acos,0.2,Meta interna do time
+shopee,OND-HID-03,roas,6.4,GMV Max Custom ROAS
+amazon,OND-HID-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-04,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-04,acos,0.2,Meta interna do time
+shopee,OND-HID-04,roas,6.0,GMV Max Custom ROAS
+amazon,OND-HID-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-05,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-05,acos,0.2,Meta interna do time
+shopee,OND-HID-05,roas,4.8,GMV Max Custom ROAS
+amazon,OND-HID-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-06,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-06,acos,0.2,Meta interna do time
+shopee,OND-HID-06,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-HID-06,acos,0.22,Meta interna do time
+tiktok_shop,OND-HID-07,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-HID-07,acos,0.2,Meta interna do time
+shopee,OND-HID-07,roas,5.3,GMV Max Custom ROAS
+amazon,OND-HID-07,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-01,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-01,acos,0.2,Meta interna do time
+shopee,OND-LIM-01,roas,4.6,GMV Max Custom ROAS
+amazon,OND-LIM-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-02,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-02,acos,0.2,Meta interna do time
+shopee,OND-LIM-02,roas,5.0,GMV Max Custom ROAS
+amazon,OND-LIM-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-03,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-03,acos,0.2,Meta interna do time
+shopee,OND-LIM-03,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-LIM-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-04,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-04,acos,0.2,Meta interna do time
+shopee,OND-LIM-04,roas,5.9,GMV Max Custom ROAS
+amazon,OND-LIM-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-05,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-05,acos,0.2,Meta interna do time
+shopee,OND-LIM-05,roas,4.9,GMV Max Custom ROAS
+amazon,OND-LIM-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-LIM-06,roas,6.6,GMV Max Target ROI (campanha)
+mercado_livre,OND-LIM-06,acos,0.2,Meta interna do time
+shopee,OND-LIM-06,roas,6.9,GMV Max Custom ROAS
+amazon,OND-LIM-06,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-01,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-01,acos,0.2,Meta interna do time
+shopee,OND-KIT-01,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-KIT-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-02,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-02,acos,0.2,Meta interna do time
+shopee,OND-KIT-02,roas,6.0,GMV Max Custom ROAS
+amazon,OND-KIT-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-03,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-03,acos,0.2,Meta interna do time
+shopee,OND-KIT-03,roas,5.6,GMV Max Custom ROAS
+amazon,OND-KIT-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-04,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-04,acos,0.2,Meta interna do time
+shopee,OND-KIT-04,roas,4.8,GMV Max Custom ROAS
+amazon,OND-KIT-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-05,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-05,acos,0.2,Meta interna do time
+shopee,OND-KIT-05,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-KIT-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-KIT-06,roas,5.1,GMV Max Target ROI (campanha)
+mercado_livre,OND-KIT-06,acos,0.2,Meta interna do time
+shopee,OND-KIT-06,roas,5.9,GMV Max Custom ROAS
+amazon,OND-KIT-06,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-01,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-01,acos,0.2,Meta interna do time
+shopee,OND-CRP-01,roas,5.4,GMV Max Custom ROAS
+amazon,OND-CRP-01,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-02,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-02,acos,0.2,Meta interna do time
+shopee,OND-CRP-02,roas,5.1,GMV Max Custom ROAS
+amazon,OND-CRP-02,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-03,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-03,acos,0.2,Meta interna do time
+shopee,OND-CRP-03,roas,,GMV Max Auto Bidding (sem meta)
+amazon,OND-CRP-03,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-04,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-04,acos,0.2,Meta interna do time
+shopee,OND-CRP-04,roas,6.3,GMV Max Custom ROAS
+amazon,OND-CRP-04,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-05,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-05,acos,0.2,Meta interna do time
+shopee,OND-CRP-05,roas,5.1,GMV Max Custom ROAS
+amazon,OND-CRP-05,acos,0.22,Meta interna do time
+tiktok_shop,OND-CRP-06,roas,6.2,GMV Max Target ROI (campanha)
+mercado_livre,OND-CRP-06,acos,0.2,Meta interna do time
+shopee,OND-CRP-06,roas,5.4,GMV Max Custom ROAS
+amazon,OND-CRP-06,acos,0.22,Meta interna do time

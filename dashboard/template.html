@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Margem Real · lucro incremental de ads em marketplaces</title>
+<meta name="description" content="Quanto lucro incremental cada real de ads gera, por SKU e por canal: TikTok Shop, Mercado Livre, Shopee e Amazon. Dados fictícios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#f7f4ee; --card:#fffdf8; --ink:#1b1a17; --ink2:#4f4b43; --ink3:#7c766a;
+  --rule:#e4ddcf; --rule2:#cfc6b4; --wash:#efe9dd; --muted:#c9bfae;
+  --ch0:#2a78d6; --ch1:#eb6834; --ch2:#1baf7a; --ch3:#eda100; --off:#8a8478;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b; --goodtxt:#0b6b0b; --crittxt:#a52a2a;
+  --shadow:0 1px 0 rgba(27,26,23,.04),0 10px 30px -18px rgba(27,26,23,.35);
+}
+@media (prefers-color-scheme:dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme:dark;
+    --paper:#1c1b19; --card:#242320; --ink:#f0ece4; --ink2:#cbc5b8; --ink3:#9a9385;
+    --rule:#36342f; --rule2:#4a4740; --wash:#2c2a26; --muted:#5a564e;
+    --ch0:#3987e5; --ch1:#d95926; --ch2:#199e70; --ch3:#c98500; --off:#8f897d;
+    --goodtxt:#5fd35f; --crittxt:#f08a8a; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1c1b19; --card:#242320; --ink:#f0ece4; --ink2:#cbc5b8; --ink3:#9a9385;
+  --rule:#36342f; --rule2:#4a4740; --wash:#2c2a26; --muted:#5a564e;
+  --ch0:#3987e5; --ch1:#d95926; --ch2:#199e70; --ch3:#c98500; --off:#8f897d;
+  --goodtxt:#5fd35f; --crittxt:#f08a8a; --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.num,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+/* masthead */
+.mast{border-bottom:3px double var(--ink);padding:34px 0 18px}
+.kicker{font:500 12px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+h1{font:800 clamp(40px,6vw,72px)/.95 Fraunces,Georgia,serif;letter-spacing:-.02em;margin:10px 0 8px}
+h1 em{font-style:normal;color:var(--ink3);font-weight:400}
+.dek{font:400 clamp(18px,2.2vw,22px)/1.35 Fraunces,Georgia,serif;max-width:760px;margin:0;color:var(--ink2)}
+.metaline{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font:12px/1.4 "IBM Plex Mono",monospace;color:var(--ink3)}
+.metaline b{color:var(--ink2);font-weight:500}
+.stamp{border:1px solid var(--rule2);padding:1px 6px;border-radius:3px}
+.stamp.bad{border-color:var(--crit);color:var(--crittxt)}
+/* filters */
+.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;padding-top:10px;padding-bottom:10px}
+.fgroup{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.flabel{font:500 11px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-right:2px}
+.chip{border:1px solid var(--rule2);background:var(--card);color:var(--ink2);border-radius:999px;padding:4px 11px;font:500 13px/1.2 "IBM Plex Sans",sans-serif;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip:hover{border-color:var(--ink3)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip .sw{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chip.reset{border-style:dashed;background:transparent}
+/* layout */
+section{padding:34px 0 8px}
+.sechead{display:grid;grid-template-columns:56px 1fr;gap:0 14px;align-items:baseline;border-top:1px solid var(--ink);padding-top:12px;margin-bottom:16px}
+.secno{font:600 28px/1 Fraunces,serif;color:var(--ink3)}
+h2{font:600 26px/1.15 Fraunces,Georgia,serif;margin:0;letter-spacing:-.01em}
+.sub{grid-column:2;color:var(--ink2);margin:6px 0 0;max-width:820px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:6px;box-shadow:var(--shadow);padding:18px}
+.howto{margin:14px 0 0;padding-top:10px;border-top:1px dotted var(--rule2);font-size:13px;color:var(--ink3)}
+.howto b{color:var(--ink2)}
+.caveat{font-size:13px;color:var(--ink2);background:var(--wash);border-left:3px solid var(--ink3);padding:8px 12px;margin:12px 0 0}
+/* thesis */
+.thesis{font:400 clamp(17px,2vw,20px)/1.5 Fraunces,Georgia,serif;margin:26px 0 0;padding:18px 22px;border:1px solid var(--rule2);border-radius:6px;background:var(--card)}
+.thesis .warn{display:block;margin-top:10px;font:13px/1.45 "IBM Plex Sans",sans-serif;color:var(--ink2)}
+.pos{color:var(--goodtxt);font-weight:600}.neg{color:var(--crittxt);font-weight:600}
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:18px}
+.kpi{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;cursor:pointer;transition:transform .12s,border-color .12s;text-align:left;color:inherit;font:inherit}
+.kpi:hover{transform:translateY(-2px);border-color:var(--ink3)}
+.kpi .l{font:500 11px/1.3 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);min-height:29px}
+.kpi .v{font:600 21px/1.15 "IBM Plex Mono",monospace;margin-top:6px;letter-spacing:-.02em;white-space:nowrap}
+.kpi .s{font-size:12px;color:var(--ink2);margin-top:4px}
+.kpi .go{font-size:11px;color:var(--ink3);margin-top:6px}
+/* svg charts */
+svg text{font-family:"IBM Plex Sans",sans-serif;fill:var(--ink2)}
+svg .mono{font-family:"IBM Plex Mono",monospace}
+.axis line,.grid line{stroke:var(--rule);stroke-width:1}
+.hit{cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink2);margin-bottom:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.mk{display:inline-block}
+/* experiment */
+.multiples{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.mult{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:12px 12px 10px}
+.mult h3{margin:0 0 2px;font:600 15px/1.2 "IBM Plex Sans",sans-serif;display:flex;align-items:center;gap:7px}
+.mult .read{font-size:12.5px;color:var(--ink2);margin-top:6px;line-height:1.55}
+.mult .read .num{color:var(--ink)}
+.badge{display:inline-flex;gap:5px;align-items:center;font:500 11.5px/1.2 "IBM Plex Mono",monospace;border:1px solid var(--rule2);border-radius:3px;padding:2px 6px;margin-top:6px}
+.dim{opacity:.35}
+/* waterfall + dumbbell */
+.two{display:grid;grid-template-columns:1.05fr 1fr;gap:14px}
+/* matrix */
+.mtools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:13px;color:var(--ink2)}
+.mtools input{border:1px solid var(--rule2);background:var(--card);color:var(--ink);border-radius:4px;padding:5px 9px;font:inherit;min-width:220px}
+table{border-collapse:collapse;width:100%}
+.matrix th{font:500 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:8px 8px;border-bottom:1px solid var(--ink);background:var(--card)}
+.matrix td{padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+.matrix tr:hover td{background:var(--wash)}
+.sku .n{font-weight:500}.sku .c{font-size:12px;color:var(--ink3)}
+.cell{cursor:pointer;border-radius:4px;padding:5px 7px;border:1px solid transparent;min-width:150px}
+.cell:hover{border-color:var(--ink3)}
+.vchip{display:inline-flex;gap:5px;align-items:center;font:600 11.5px/1.2 "IBM Plex Sans",sans-serif;padding:2px 7px 2px 5px;border-radius:999px;color:var(--ink)}
+.vchip i{font-style:normal;width:15px;height:15px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;font-size:10px;font-weight:700}
+.v-lucra i{background:var(--good)} .v-no_limite i{background:var(--warn);color:#1b1a17} .v-queima i{background:var(--crit)}
+.v-margem_negativa i{background:repeating-linear-gradient(45deg,var(--crit) 0 3px,#7d1f1f 3px 6px)}
+.cell .nums{font:12px/1.4 "IBM Plex Mono",monospace;color:var(--ink2);margin-top:3px}
+.cell .flag{font-size:11.5px;color:var(--crittxt);margin-top:2px}
+.tprofit{text-align:right;white-space:nowrap}
+.scrollx{overflow-x:auto}
+/* tables */
+.tbl th{font:500 11px/1.2 "IBM Plex Mono",monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:7px 8px;border-bottom:1px solid var(--ink)}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--rule);font-size:13.5px}
+.tbl td.r,.tbl th.r{text-align:right}
+.ok{color:var(--goodtxt);font-weight:600}.ko{color:var(--crittxt);font-weight:600}
+.rules{columns:2;column-gap:34px;font-size:14px;color:var(--ink2);padding-left:20px;margin:0}
+.rules li{break-inside:avoid;margin-bottom:8px}
+details{margin-top:10px}
+summary{cursor:pointer;font-weight:500}
+/* tooltip */
+#tip{position:fixed;pointer-events:none;z-index:60;background:var(--ink);color:var(--paper);font:12.5px/1.45 "IBM Plex Sans",sans-serif;padding:7px 10px;border-radius:4px;max-width:280px;opacity:0;transition:opacity .08s}
+#tip .num{font-family:"IBM Plex Mono",monospace}
+/* modal */
+.modal-bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(20,18,15,.55);z-index:80;padding:20px}
+.modal-bg[hidden]{display:none}
+.modal{background:var(--card);border:1px solid var(--rule2);border-radius:8px;width:min(1100px,100%);max-height:88vh;display:flex;flex-direction:column}
+.mhead{padding:16px 18px 10px;border-bottom:1px solid var(--rule)}
+.mhead h3{margin:0;font:600 20px/1.2 Fraunces,serif}
+.mhead .mnote{font-size:13px;color:var(--ink2);margin-top:4px}
+.mctl{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.mctl input{flex:1;min-width:200px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink);border-radius:4px;padding:6px 9px;font:inherit}
+.btn{border:1px solid var(--rule2);background:var(--paper);color:var(--ink);border-radius:4px;padding:6px 11px;font:500 13px "IBM Plex Sans",sans-serif;cursor:pointer}
+.btn:hover{border-color:var(--ink3)}
+.mbody{overflow:auto;padding:0 18px}
+.mbody table th{position:sticky;top:0;background:var(--card)}
+.mfoot{padding:8px 18px 12px;font-size:12.5px;color:var(--ink3);border-top:1px solid var(--rule)}
+footer{margin:40px 0 0;padding:20px 0 40px;border-top:3px double var(--ink);font-size:13px;color:var(--ink3)}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}.multiples{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.rules{columns:1}}
+@media (max-width:560px){.bar{position:static}.kpis{grid-template-columns:repeat(2,1fr)}.multiples{grid-template-columns:1fr}.sechead{grid-template-columns:34px 1fr}.secno{font-size:20px}.kpi .v{font-size:18px}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div class="kicker">Commerce media · análise de incrementalidade · dados fictícios</div>
+    <h1>Margem Real <em>/</em></h1>
+    <p class="dek">Quanto lucro incremental cada real de ads gera, por SKU e por canal, quando o ROAS que a plataforma mostra mistura venda paga, orgânica e de afiliado.</p>
+    <div class="metaline" id="metaline"></div>
+  </div>
+</header>
+
+<div class="bar" role="region" aria-label="Filtros">
+  <div class="wrap">
+    <div class="fgroup"><span class="flabel">Canal</span><span id="fCh"></span></div>
+    <div class="fgroup"><span class="flabel">Categoria</span><span id="fCat"></span></div>
+    <div class="fgroup"><span class="flabel">Período</span><span id="fPer"></span></div>
+    <button class="chip reset" id="fReset" type="button">limpar</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="thesis" id="thesis" aria-live="polite"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <section>
+    <div class="sechead"><span class="secno">§1</span><h2>O que o painel diz e o que o caixa vê</h2>
+      <p class="sub">Para cada canal: o ROAS que a plataforma reporta, o retorno incremental medido no experimento e o retorno mínimo para os ads se pagarem depois de CMV, taxas, frete e afiliados.</p></div>
+    <div class="two">
+      <div class="card">
+        <div class="legend">
+          <span><svg class="mk" width="14" height="14"><circle cx="7" cy="7" r="5" fill="var(--card)" stroke="var(--ink3)" stroke-width="2"/></svg>ROAS reportado</span>
+          <span><svg class="mk" width="14" height="14"><circle cx="7" cy="7" r="5.5" fill="var(--ink2)"/></svg>iROAS (incremental)</span>
+          <span><svg class="mk" width="10" height="16"><line x1="5" y1="1" x2="5" y2="15" stroke="var(--ink)" stroke-width="2.5"/></svg>Equilíbrio</span>
+        </div>
+        <div id="dumbbell"></div>
+        <p class="howto"><b>Como ler:</b> a distância entre o círculo vazio e o cheio é a venda que a plataforma credita aos ads mas viria de qualquer jeito. Se o círculo cheio fica à esquerda do traço, cada real investido devolveu menos margem do que custou. Base: dias com relatório de ads (os 2 dias sem export da Amazon ficam de fora). Clique numa linha para ver os dias.</p>
+      </div>
+      <div class="card">
+        <div class="legend" id="wfLegend"></div>
+        <div id="waterfall"></div>
+        <p class="howto"><b>Como ler:</b> do GMV que a plataforma atribui ao lucro que sobra. "Venda que viria de qualquer jeito" usa o k do experimento de cada canal; os custos usam a margem real de cada SKU no OMS. Clique numa barra para ver as linhas que a compõem, piores primeiro.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead"><span class="secno">§2</span><h2>O experimento: desligar os ads de metade dos SKUs</h2>
+      <p class="sub">Em cada canal, os SKUs foram pareados por tamanho e um de cada par teve os ads desligados a partir de 17/08. O que o grupo apagado deixou de vender, comparado à tendência do grupo ligado, é a venda que os ads realmente causavam.</p></div>
+    <div class="legend">
+      <span><svg class="mk" width="22" height="10"><line x1="1" y1="5" x2="21" y2="5" stroke="var(--off)" stroke-width="2"/></svg>Ads ligados</span>
+      <span><svg class="mk" width="22" height="10"><line x1="1" y1="5" x2="21" y2="5" stroke="var(--ink)" stroke-width="2"/></svg>Ads apagados (cor do canal)</span>
+    </div>
+    <div class="multiples" id="multiples"></div>
+    <p class="caveat">O experimento não muda com os filtros: o k (fatia incremental do GMV atribuído) é estimado com os 40 SKUs de cada canal e aplicado a qualquer recorte. Intervalos de 95% por jackknife (deixa um SKU de fora por vez). Como a base é sintética, o gerador sabe a resposta certa: o selo mostra se ela caiu dentro do intervalo. O teste mede efeito de curto prazo; ganho de ranking orgânico, recompra e efeito entre canais ficam de fora.</p>
+  </section>
+
+  <section>
+    <div class="sechead"><span class="secno">§3</span><h2>Meta mínima de ROAS por SKU e canal</h2>
+      <p class="sub">O número para digitar no GMV Max ou no Custom ROAS: equilíbrio = 1 ÷ (k × margem de contribuição). Abaixo dele, a plataforma entrega e reporta bem, e a conta fecha no vermelho.</p></div>
+    <div class="card">
+      <div class="mtools">
+        <input id="mSearch" type="search" placeholder="Buscar SKU ou categoria" aria-label="Buscar SKU">
+        <span id="mCount"></span>
+        <span class="legend" style="margin:0">
+          <span class="vchip v-lucra"><i>✓</i>lucra</span>
+          <span class="vchip v-no_limite"><i>!</i>no limite (±10%)</span>
+          <span class="vchip v-queima"><i>↓</i>queima margem</span>
+          <span class="vchip v-margem_negativa"><i>✕</i>margem negativa</span>
+        </span>
+      </div>
+      <div class="scrollx"><table class="matrix" id="matrix"></table></div>
+      <p class="howto"><b>Como ler:</b> em cada célula, "real" é o ROAS que a plataforma reportou na janela toda e "mín." é o equilíbrio (entre parênteses, a faixa que vem do intervalo do k). ⚑ marca onde a meta configurada hoje está abaixo do equilíbrio. SKUs ordenados do maior prejuízo para o maior lucro. A matriz usa sempre a janela toda (ignora o filtro de período). Clique numa célula para abrir os dias.</p>
+    </div>
+  </section>
+
+  <section id="secRoi">
+    <div class="sechead"><span class="secno">§4</span><h2>TikTok Shop: créditos de ROI protection</h2>
+      <p class="sub">Quando uma campanha GMV Max fecha o dia abaixo de 90% da meta de ROI, com mais de 20 pedidos e sem edição manual da meta, o TikTok devolve a diferença em crédito. O SQL recalcula a regra e confere com o extrato.</p></div>
+    <div class="two">
+      <div class="card"><div id="roiBars"></div>
+        <p class="howto"><b>Como ler:</b> cada dia-campanha cai em uma situação, na ordem em que a regra é testada. Clique numa barra para ver os dias. O crédito reduz o custo líquido dos ads e entra na cascata do §1.</p></div>
+      <div class="card"><div id="roiNote"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead"><span class="secno">§5</span><h2>Validação e método</h2>
+      <p class="sub">O navegador recalcula tudo a partir das linhas e compara com o que o SQL produziu. Abaixo, essa conferência, as checagens automáticas do pipeline e as regras aplicadas.</p></div>
+    <div class="two">
+      <div class="card"><h3 style="margin:0 0 8px;font:600 16px Fraunces,serif">SQL × JavaScript</h3><div class="scrollx"><table class="tbl" id="xcheck"></table></div></div>
+      <div class="card"><h3 style="margin:0 0 8px;font:600 16px Fraunces,serif">Checagens do pipeline</h3><div id="valid"></div>
+        <h3 style="margin:16px 0 8px;font:600 16px Fraunces,serif">Limpeza em números</h3><table class="tbl" id="cleaning"></table></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin:0 0 10px;font:600 16px Fraunces,serif">As regras aplicadas</h3>
+      <ol class="rules">
+        <li>A fonte da verdade financeira é o OMS da marca. Os relatórios das plataformas só dizem quanto foi investido e quanto cada uma atribui aos ads.</li>
+        <li>Dia sem export do relatório de ads é "sem medida", nunca zero. Dia com export e sem linha do SKU é zero de verdade (ads desligados).</li>
+        <li>Margem de contribuição = receita bruta − CMV − devoluções − taxa do marketplace e imposto sobre a receita líquida − tarifa fixa − frete pago pelo vendedor − embalagem − comissão de afiliado. Unidade devolvida é tratada como perdida (conservador).</li>
+        <li>k = GMV perdido pelo grupo apagado ÷ GMV que a plataforma teria atribuído a ele. GMV incremental de qualquer recorte = GMV atribuído × k do canal.</li>
+        <li>Lucro incremental = GMV incremental × margem do SKU no canal − investimento + créditos de ROI protection.</li>
+        <li>Equilíbrio de ROAS na plataforma = 1 ÷ (k × margem). Veredito: "lucra" se o ROAS real passa 10% acima do equilíbrio, "no limite" dentro de ±10%, "queima" abaixo.</li>
+        <li>Meta recomendada = equilíbrio + 10% de folga. Se ela passa de 1,5× o ROAS que o SKU entrega hoje, a recomendação é pausar e medir sem ads.</li>
+        <li>Mercado Livre e Amazon têm meta interna em ACOS; para comparar, ACOS vira ROAS (1 ÷ ACOS). Shopee em Auto Bidding não tem meta.</li>
+        <li>Créditos de ROI protection são do dia-campanha e foram rateados entre os SKUs pela participação no custo.</li>
+        <li>Taxas, fretes e comissões são premissas ilustrativas de uma marca fictícia, não tarifas reais das plataformas.</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    Margem Real · projeto de portfólio de análise de dados em mídia para commerce. Marca, SKUs, pedidos e relatórios são 100% sintéticos, gerados com semente fixa.
+    Código, SQL e gerador: <a href="https://github.com/diegosantm/margem-real-commerce-media">github.com/diegosantm/margem-real-commerce-media</a>
+  </footer>
+</main>
+
+<div id="tip" role="tooltip"></div>
+<div class="modal-bg" id="modalBg" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="mhead">
+      <h3 id="mTitle"></h3>
+      <div class="mnote" id="mNote"></div>
+      <div class="mctl"><input id="mFind" type="search" placeholder="Filtrar linhas (data, SKU, canal…)" aria-label="Filtrar linhas"><button class="btn" id="mCsv" type="button">Baixar CSV</button><button class="btn" id="mClose" type="button">Fechar (Esc)</button></div>
+    </div>
+    <div class="mbody"><table class="tbl" id="mTable"></table></div>
+    <div class="mfoot" id="mFoot"></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const D = /*__DATA__*/null;
+
+/* ---------- row layout ---------- */
+/* [0 day, 1 ch, 2 sku, 3 arm(0 on / 1 dark), 4 orders, 5 units, 6 gross, 7 refunds, 8 affComm, 9 spend(-1 sem medida), 10 attr(-1 sem medida), 11 credit] */
+const DAY=0, CH=1, SKU=2, ARM=3, ORD=4, UNI=5, GROSS=6, REF=7, AFF=8, SPEND=9, ATTR=10, CRED=11;
+const ROWS = D.rows, TS = D.meta.testStartDay, NCH = D.channels.length, NSKU = D.skus.length;
+const CHVAR = ['var(--ch0)','var(--ch1)','var(--ch2)','var(--ch3)'];
+const VERD = {lucra:{l:'lucra',i:'✓'}, no_limite:{l:'no limite',i:'!'}, queima:{l:'queima margem',i:'↓'}, margem_negativa:{l:'margem negativa',i:'✕'}};
+
+/* ---------- formatting ---------- */
+const nf = (d) => new Intl.NumberFormat('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const NF0 = nf(0), NF1 = nf(1), NF2 = nf(2);
+const brl = v => (v<0?'−':'')+'R$ '+NF0.format(Math.abs(v));
+const brlK = v => { const a=Math.abs(v), s=v<0?'−':''; return a>=1e6? s+'R$ '+NF2.format(a/1e6)+' mi' : a>=1e4? s+'R$ '+NF0.format(a/1e3)+' mil' : s+'R$ '+NF0.format(a); };
+const signK = v => (v>=0?'+':'')+brlK(v);
+const xr = (v,d=2) => (v==null||!isFinite(v))?'n/d':nf(d).format(v)+'x';
+const pct = (v,d=0) => (v==null||!isFinite(v))?'n/d':nf(d).format(v*100)+'%';
+const dstr = day => { const t=new Date(day*864e5); return String(t.getUTCDate()).padStart(2,'0')+'/'+String(t.getUTCMonth()+1).padStart(2,'0'); };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const chName = i => D.channels[i].label;
+
+/* ---------- build stamp (guards against a stale or truncated data block) ---------- */
+function fnv1a(s){let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return h.toString(16);}
+const RUNTIME_GROSS = ROWS.reduce((s,r)=>s+r[GROSS],0);
+const STAMP_OK = ROWS.length===D.sql.totals.n && Math.abs(RUNTIME_GROSS-D.sql.totals.gross)<0.5;
+
+/* ======================================================================
+   SINGLE READ FUNCTIONS: nothing outside this block reads raw fields
+   for spend, attribution, costs or contribution.
+   ====================================================================== */
+const P = D.chParams;
+function spendDe(r){ return r[SPEND]<0 ? null : r[SPEND]; }   // null = sem medida
+function attrDe(r){ return r[ATTR]<0 ? null : r[ATTR]; }
+function custosDe(r){
+  const p=P[r[CH]], s=D.skus[r[SKU]];
+  return {
+    cogs: r[UNI]*s.cogs,
+    fees: r[REF] + (r[GROSS]-r[REF])*(p.marketplace_fee_pct+p.tax_pct) + r[ORD]*p.fixed_fee_per_order,
+    log:  r[ORD]*(p.seller_shipping_per_order+p.packaging_per_order) + r[AFF]
+  };
+}
+function contribDe(r){ const c=custosDe(r); return r[GROSS]-c.cogs-c.fees-c.log; }
+
+/* unit economics per channel x SKU over the whole window (unfiltered) */
+const ECON = Array.from({length:NCH},()=>Array.from({length:NSKU},()=>({gross:0,contrib:0,cogs:0,fees:0,log:0,spend:0,attr:0,credit:0})));
+for(const r of ROWS){
+  const e=ECON[r[CH]][r[SKU]], c=custosDe(r);
+  e.gross+=r[GROSS]; e.cogs+=c.cogs; e.fees+=c.fees; e.log+=c.log; e.contrib+=r[GROSS]-c.cogs-c.fees-c.log;
+  const s=spendDe(r); if(s!=null && s>0){ e.spend+=s; e.attr+=attrDe(r); }
+  e.credit+=r[CRED];
+}
+for(const row of ECON) for(const e of row){ e.cm=e.contrib/e.gross; e.shCogs=e.cogs/e.gross; e.shFees=e.fees/e.gross; e.shLog=e.log/e.gross; e.roas=e.attr/e.spend; }
+
+/* ---------- experiment: ratio DiD + leave-one-SKU-out jackknife ---------- */
+const MEANS = Array.from({length:NCH},()=>Array.from({length:NSKU},()=>({arm:0,pG:0,pN:0,tG:0,tN:0,pS:0,pSN:0,tS:0,tSN:0,pA:0,pAN:0,tA:0,tAN:0})));
+for(const r of ROWS){
+  const m=MEANS[r[CH]][r[SKU]], pre=r[DAY]<TS, s=spendDe(r), a=attrDe(r);
+  m.arm=r[ARM];
+  if(pre){ m.pG+=r[GROSS]; m.pN++; if(s!=null){m.pS+=s;m.pSN++;} if(a!=null){m.pA+=a;m.pAN++;} }
+  else   { m.tG+=r[GROSS]; m.tN++; if(s!=null){m.tS+=s;m.tSN++;} if(a!=null){m.tA+=a;m.tAN++;} }
+}
+function didEstimate(ch, skip){
+  let onPG=0,onTG=0,onPS=0,onTS=0,onPA=0,onTA=0;
+  MEANS[ch].forEach((m,i)=>{ if(m.arm===0 && i!==skip){ onPG+=m.pG/m.pN; onTG+=m.tG/m.tN; onPS+=m.pS/m.pSN; onTS+=m.tS/m.tSN; onPA+=m.pA/m.pAN; onTA+=m.tA/m.tAN; }});
+  const rg=onTG/onPG, rs=onTS/onPS, ra=onTA/onPA;
+  let lost=0, scf=0, acf=0;
+  MEANS[ch].forEach((m,i)=>{ if(m.arm===1 && i!==skip){ lost+=(m.pG/m.pN)*rg-(m.tG/m.tN); scf+=(m.pS/m.pSN)*rs; acf+=(m.pA/m.pAN)*ra; }});
+  return {iroas:lost/scf, k:lost/acf, rg, lost, scf, acf};
+}
+const EXP = D.channels.map((c,ch)=>{
+  const pt=didEstimate(ch,-1), jk=[];
+  for(let i=0;i<NSKU;i++) jk.push(didEstimate(ch,i));
+  const n=jk.length, se=key=>{const m=jk.reduce((s,x)=>s+x[key],0)/n; return Math.sqrt((n-1)/n*jk.reduce((s,x)=>s+(x[key]-m)**2,0));};
+  const sI=se('iroas'), sK=se('k');
+  return {...pt, iroasLo:pt.iroas-1.96*sI, iroasHi:pt.iroas+1.96*sI, kLo:pt.k-1.96*sK, kHi:pt.k+1.96*sK};
+});
+const K = EXP.map(e=>e.k);
+
+/* derived reads that depend on k */
+function incDe(r){ const a=attrDe(r); return a==null?0:a*K[r[CH]]; }
+function lucroDe(r){ const s=spendDe(r); if(s==null) return null; return incDe(r)*ECON[r[CH]][r[SKU]].cm - s + r[CRED]; }
+
+/* verdict per channel x SKU: same cut-offs as SQL (mart_breakeven_actions) */
+const TGT = {}; for(const t of D.targets){ TGT[t.channel+'|'+t.sku_id] = t; }
+function econDe(ch, sku){
+  const e=ECON[ch][sku], k=K[ch], ex=EXP[ch];
+  const be = e.cm>0 ? 1/(k*e.cm) : null;
+  const beLo = e.cm>0 ? 1/(ex.kHi*e.cm) : null, beHi = (e.cm>0 && ex.kLo>0) ? 1/(ex.kLo*e.cm) : null;
+  let verdict = e.cm<=0 ? 'margem_negativa' : e.roas>=1.10*be ? 'lucra' : e.roas>=0.90*be ? 'no_limite' : 'queima';
+  const t=TGT[D.channels[ch].id+'|'+D.skus[sku].id];
+  const tgt = !t || t.target_value==null ? null : (t.target_metric==='roas' ? t.target_value : 1/t.target_value);
+  const profit = e.attr*k*e.cm - (e.spend - e.credit);
+  const rec = be!=null ? Math.round(be*1.10*10)/10 : null;
+  const action = e.cm<=0 ? 'Rever preço/frete antes de anunciar: cada venda já perde dinheiro'
+    : verdict==='lucra' ? 'Pode escalar orçamento mantendo a meta'
+    : be*1.10 <= 1.5*e.roas ? 'Subir a meta para '+NF1.format(rec)+'x (entrega vai cair)'
+    : 'Meta de equilíbrio inalcançável hoje: pausar e medir sem ads';
+  return {cm:e.cm, roas:e.roas, be, beLo, beHi, verdict, tgt, tgtSrc:t?t.target_source:'', below: tgt!=null && e.cm>0 && tgt<be, profit, rec, action};
+}
+
+/* ---------- aggregation over any row set ---------- */
+function agg(rows){
+  const a={gross:0,spend:0,attr:0,credit:0,gmvAd:0,inc:0,incC:0,cCogs:0,cFees:0,cLog:0,miss:0,n:rows.length};
+  for(const r of rows){
+    a.gross+=r[GROSS]; a.credit+=r[CRED];
+    const s=spendDe(r);
+    if(s==null){ a.miss++; continue; }
+    const at=attrDe(r), e=ECON[r[CH]][r[SKU]], inc=at*K[r[CH]];
+    a.spend+=s; a.attr+=at; if(s>0) a.gmvAd+=r[GROSS];
+    a.inc+=inc; a.incC+=inc*e.cm; a.cCogs+=inc*e.shCogs; a.cFees+=inc*e.shFees; a.cLog+=inc*e.shLog;
+  }
+  a.net=a.spend-a.credit; a.profit=a.incC-a.net;
+  a.roas=a.attr/a.spend; a.iroas=a.inc/a.spend; a.beI=a.inc/a.incC; a.tacos=a.spend/a.gmvAd; a.kEff=a.inc/a.attr;
+  return a;
+}
+
+/* ---------- state -> passes -> render ---------- */
+const state = {ch:new Set([0,1,2,3]), cat:new Set(D.cats.map((_,i)=>i)), per:'all'};
+const PER = [{v:'all',l:'Janela toda'},{v:'pre',l:'Pré-teste'},{v:'test',l:'Teste'}];
+function passes(r, ignorePeriod){
+  if(!state.ch.has(r[CH])) return false;
+  if(!state.cat.has(D.skus[r[SKU]].cat)) return false;
+  if(!ignorePeriod){ if(state.per==='pre' && r[DAY]>=TS) return false; if(state.per==='test' && r[DAY]<TS) return false; }
+  return true;
+}
+let cur = [];
+function render(){
+  cur = ROWS.filter(r=>passes(r,false));
+  renderChips(); renderThesis(cur); renderKPIs(cur); renderDumbbell(cur); renderWaterfall(cur); renderMatrix(); renderMultiples(); renderRoi();
+}
+
+/* ---------- filters ---------- */
+function chipBtn(label, pressed, onclick, sw){
+  const b=document.createElement('button'); b.type='button'; b.className='chip'; b.setAttribute('aria-pressed',pressed);
+  b.innerHTML=(sw?`<span class="sw" style="background:${sw}"></span>`:'')+esc(label); b.onclick=onclick; return b;
+}
+function toggle(set, v, all){ if(set.size===all && set.has(v)){ set.clear(); set.add(v); } else if(set.has(v)){ set.delete(v); if(!set.size) for(let i=0;i<all;i++) set.add(i); } else set.add(v); render(); }
+function renderChips(){
+  const fc=document.getElementById('fCh'); fc.innerHTML='';
+  D.channels.forEach((c,i)=>fc.appendChild(chipBtn(c.label, state.ch.has(i)&&state.ch.size<NCH, ()=>toggle(state.ch,i,NCH), CHVAR[i])));
+  const ft=document.getElementById('fCat'); ft.innerHTML='';
+  D.cats.forEach((c,i)=>ft.appendChild(chipBtn(c, state.cat.has(i)&&state.cat.size<D.cats.length, ()=>toggle(state.cat,i,D.cats.length))));
+  const fp=document.getElementById('fPer'); fp.innerHTML='';
+  PER.forEach(p=>fp.appendChild(chipBtn(p.l, state.per===p.v, ()=>{state.per=p.v; render();})));
+}
+document.getElementById('fReset').onclick=()=>{ state.ch=new Set([0,1,2,3]); state.cat=new Set(D.cats.map((_,i)=>i)); state.per='all'; render(); };
+
+/* ---------- thesis generated from the current slice ---------- */
+function sliceLabel(){
+  const ch = state.ch.size===NCH ? 'os 4 marketplaces' : [...state.ch].sort().map(chName).join(', ');
+  const ct = state.cat.size===D.cats.length ? 'todas as categorias' : [...state.cat].sort().map(i=>D.cats[i]).join(', ');
+  const pe = PER.find(p=>p.v===state.per).l.toLowerCase();
+  return `${ch}, ${ct}, ${pe}`;
+}
+function renderThesis(rows){
+  const a=agg(rows);
+  let t = `No recorte atual (${esc(sliceLabel())}), as plataformas creditaram <b>${brlK(a.attr)}</b> em vendas aos anúncios, um ROAS reportado de <b>${xr(a.roas)}</b>. `;
+  t += `O experimento indica que só <b>${pct(a.kEff)}</b> disso foi causado pelos ads (iROAS de ${xr(a.iroas)}), e com a margem desses SKUs o equilíbrio pede ${xr(a.beI)}. `;
+  t += a.profit>=0 ? `Resultado: depois de pagar a si mesmos, os ads deixaram <span class="pos">${brlK(a.profit)}</span> de lucro incremental.`
+                   : `Resultado: os ads custaram <span class="neg">${brlK(-a.profit)}</span> a mais do que a margem que trouxeram.`;
+  const per = [...state.ch].map(ch=>({ch, p:agg(rows.filter(r=>r[CH]===ch)).profit})).sort((x,y)=>y.p-x.p);
+  if(per.length>1) t += ` Melhor canal: ${chName(per[0].ch)} (${signK(per[0].p)}). Pior: ${chName(per[per.length-1].ch)} (${signK(per[per.length-1].p)}).`;
+  const warns=[];
+  if(state.per==='test') warns.push('Atenção: no período de teste metade dos SKUs está com ads desligados por desenho; investimento e GMV atribuído caem e não comparam com o pré-teste.');
+  if(a.miss>0) warns.push(`${NF0.format(a.miss)} linhas sem medida (export da Amazon ausente em 03 e 04/07) ficam fora das métricas de ads, mas dentro do GMV.`);
+  if(!STAMP_OK) warns.push('Atenção: a base embutida não confere com o carimbo do build. Os números podem estar truncados.');
+  document.getElementById('thesis').innerHTML = t + (warns.length?`<span class="warn">${warns.map(esc).join('<br>')}</span>`:'');
+}
+
+/* ---------- KPIs ---------- */
+function renderKPIs(rows){
+  const a=agg(rows);
+  const cells=[]; for(const ch of state.ch) for(let s=0;s<NSKU;s++) if(state.cat.has(D.skus[s].cat)) cells.push(econDe(ch,s));
+  const below=cells.filter(c=>c.below).length;
+  const k=[
+    {l:'Investimento líquido', v:brlK(a.net), s:`bruto ${brlK(a.spend)} · créditos ${brlK(a.credit)}`, f:r=>spendDe(r)>0, t:'Dias com investimento'},
+    {l:'ROAS reportado', v:xr(a.roas), s:`${brlK(a.attr)} atribuídos`, f:r=>spendDe(r)>0, t:'Dias com investimento'},
+    {l:'Fatia incremental', v:pct(a.kEff), s:`${brlK(a.inc)} de GMV causado pelos ads`, f:r=>spendDe(r)>0, t:'Dias com investimento'},
+    {l:'iROAS × equilíbrio', v:xr(a.iroas), s:`equilíbrio ${xr(a.beI)} · TACoS ${pct(a.tacos,1)}`, f:r=>spendDe(r)>0, t:'Dias com investimento'},
+    {l:'Lucro incremental', v:`<span class="${a.profit>=0?'pos':'neg'}">${a.profit>=0?'▲':'▼'} ${brlK(a.profit)}</span>`, s:'margem incremental − custo líquido', f:r=>spendDe(r)!=null, t:'Lucro incremental por dia'},
+    {l:'Metas abaixo do equilíbrio', v:`${below}<span style="font-size:15px;color:var(--ink3)">/${cells.length}</span>`, s:'combinações SKU × canal', f:r=>{const e=econDe(r[CH],r[SKU]);return e.below;}, t:'Linhas de SKU × canal com meta abaixo do equilíbrio'},
+  ];
+  const box=document.getElementById('kpis'); box.innerHTML='';
+  k.forEach(x=>{ const b=document.createElement('button'); b.type='button'; b.className='kpi';
+    b.innerHTML=`<div class="l">${x.l}</div><div class="v num">${x.v}</div><div class="s">${x.s}</div><div class="go">clique para ver →</div>`;
+    b.onclick=()=>openDrill(`${x.t} · ${sliceLabel()}`, rows.filter(x.f)); box.appendChild(b); });
+}
+
+/* ---------- tooltip ---------- */
+const tip=document.getElementById('tip');
+function showTip(e, html){ tip.innerHTML=html; tip.style.opacity=1; const w=tip.offsetWidth, h=tip.offsetHeight;
+  let x=e.clientX+14, y=e.clientY+14; if(x+w>innerWidth-8) x=e.clientX-w-14; if(y+h>innerHeight-8) y=e.clientY-h-14; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+function hideTip(){ tip.style.opacity=0; }
+function svgEl(tag, attrs, parent){ const el=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) el.setAttribute(k,attrs[k]); if(parent) parent.appendChild(el); return el; }
+
+/* ---------- §1 dumbbell ---------- */
+function renderDumbbell(rows){
+  const host=document.getElementById('dumbbell'); host.innerHTML='';
+  const chs=[...state.ch].sort((a,b)=>a-b);
+  const data=chs.map(ch=>({ch, a:agg(rows.filter(r=>r[CH]===ch))}));
+  const W=560, rowH=64, L=112, R=92, top=26, H=top+rowH*data.length+8;
+  const max=Math.max(7, ...data.map(d=>Math.max(d.a.roas||0, d.a.beI||0)))*1.05;
+  const x=v=>L+(W-L-R)*Math.min(v,max)/max;
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%',role:'img','aria-label':'ROAS reportado, iROAS e equilíbrio por canal'},host);
+  for(let v=0; v<=max; v+=1){ svgEl('line',{x1:x(v),x2:x(v),y1:top-6,y2:H-8,stroke:'var(--rule)','stroke-width':1},svg);
+    const t=svgEl('text',{x:x(v),y:top-12,'text-anchor':'middle','font-size':11,class:'mono'},svg); t.textContent=v+'x'; }
+  const tr=svgEl('text',{x:W-4,y:top-12,'text-anchor':'end','font-size':11},svg); tr.textContent='lucro incr.';
+  data.forEach((d,i)=>{
+    const y=top+rowH*i+rowH/2, a=d.a, col=CHVAR[d.ch];
+    const g=svgEl('g',{class:'hit'},svg);
+    svgEl('rect',{x:0,y:y-rowH/2+2,width:W,height:rowH-4,fill:'transparent'},g);
+    const lab=svgEl('text',{x:0,y:y+4,'font-size':13.5,'font-weight':600,fill:'var(--ink)'},g); lab.textContent=chName(d.ch);
+    if(!isFinite(a.roas)){ const t=svgEl('text',{x:L,y:y+4,'font-size':12},g); t.textContent='sem investimento no recorte'; return; }
+    svgEl('line',{x1:x(Math.min(a.iroas,a.roas)),x2:x(Math.max(a.iroas,a.roas)),y1:y,y2:y,stroke:'var(--muted)','stroke-width':6,'stroke-linecap':'round'},g);
+    svgEl('line',{x1:x(a.beI),x2:x(a.beI),y1:y-15,y2:y+15,stroke:'var(--ink)','stroke-width':2.5},g);
+    svgEl('circle',{cx:x(a.roas),cy:y,r:6.5,fill:'var(--card)',stroke:col,'stroke-width':2.5},g);
+    svgEl('circle',{cx:x(a.iroas),cy:y,r:7,fill:col,stroke:'var(--card)','stroke-width':2},g);
+    const t1=svgEl('text',{x:x(a.roas),y:y-13,'text-anchor':'middle','font-size':11,class:'mono'},g); t1.textContent=xr(a.roas,1);
+    const t2=svgEl('text',{x:x(a.iroas),y:y+24,'text-anchor':'middle','font-size':11,class:'mono',fill:'var(--ink)'},g); t2.textContent=xr(a.iroas,1);
+    const tp=svgEl('text',{x:W-4,y:y+4,'text-anchor':'end','font-size':13,class:'mono','font-weight':600,fill:a.profit>=0?'var(--goodtxt)':'var(--crittxt)'},g);
+    tp.textContent=(a.profit>=0?'▲ ':'▼ ')+brlK(a.profit);
+    g.addEventListener('mousemove',e=>showTip(e,`<b>${chName(d.ch)}</b><br>ROAS reportado <span class="num">${xr(a.roas)}</span><br>iROAS <span class="num">${xr(a.iroas)}</span> (k ${pct(K[d.ch])})<br>Equilíbrio <span class="num">${xr(a.beI)}</span><br>Lucro incremental <span class="num">${brl(a.profit)}</span>`));
+    g.addEventListener('mouseleave',hideTip);
+    g.addEventListener('click',()=>openDrill(`${chName(d.ch)} · dias com relatório de ads`, rows.filter(r=>r[CH]===d.ch && spendDe(r)!=null), `ROAS reportado ${xr(a.roas)} · iROAS ${xr(a.iroas)} · equilíbrio ${xr(a.beI)}`));
+  });
+}
+
+/* ---------- §1 waterfall (horizontal, ledger style) ---------- */
+function renderWaterfall(rows){
+  const a=agg(rows), host=document.getElementById('waterfall'); host.innerHTML='';
+  document.getElementById('wfLegend').innerHTML=`<span style="font-weight:600;color:var(--ink)">${esc(sliceLabel())}</span>`;
+  const steps=[
+    {l:'GMV atribuído pela plataforma', v:a.attr, k:'total'},
+    {l:'Venda que viria de qualquer jeito', v:-(a.attr-a.inc), k:'delta'},
+    {l:'GMV incremental', v:a.inc, k:'sub'},
+    {l:'CMV', v:-a.cCogs, k:'delta'},
+    {l:'Taxas, impostos e devoluções', v:-a.cFees, k:'delta'},
+    {l:'Frete, embalagem e afiliados', v:-a.cLog, k:'delta'},
+    {l:'Contribuição incremental', v:a.incC, k:'sub'},
+    {l:'Investimento em ads', v:-a.spend, k:'delta'},
+    {l:'Créditos de ROI protection', v:a.credit, k:'delta'},
+    {l:'Lucro incremental', v:a.profit, k:'final'},
+  ];
+  let run=0; steps.forEach(s=>{ if(s.k==='delta'){ s.from=run; run+=s.v; s.to=run; } else { s.from=0; s.to=s.v; run=s.v; } });
+  const W=540, L=196, R=86, rowH=29, H=rowH*steps.length+10;
+  const lo=Math.min(0,...steps.map(s=>Math.min(s.from,s.to))), hi=Math.max(...steps.map(s=>Math.max(s.from,s.to)));
+  const x=v=>L+(W-L-R)*(v-lo)/(hi-lo);
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%',role:'img','aria-label':'Cascata do GMV atribuído ao lucro incremental'},host);
+  svgEl('line',{x1:x(0),x2:x(0),y1:0,y2:H,stroke:'var(--rule2)','stroke-width':1},svg);
+  steps.forEach((s,i)=>{
+    const y=i*rowH+5, g=svgEl('g',{class:'hit'},svg);
+    svgEl('rect',{x:0,y,width:W,height:rowH,fill:'transparent'},g);
+    const strong = s.k!=='delta';
+    const t=svgEl('text',{x:0,y:y+rowH/2+4,'font-size':12.5,'font-weight':strong?600:400,fill:strong?'var(--ink)':'var(--ink2)'},g); t.textContent=s.l;
+    const x0=x(Math.min(s.from,s.to)), w=Math.max(1.5,Math.abs(x(s.to)-x(s.from)));
+    const fill = s.k==='final' ? (s.v>=0?'var(--good)':'var(--crit)') : s.k==='delta' ? (s.v>=0?'var(--off)':'var(--muted)') : 'var(--ink2)';
+    svgEl('rect',{x:x0,y:y+6,width:w,height:rowH-12,rx:2,fill},g);
+    const v=svgEl('text',{x:W-2,y:y+rowH/2+4,'text-anchor':'end','font-size':12,class:'mono','font-weight':strong?600:400,fill:s.k==='final'?(s.v>=0?'var(--goodtxt)':'var(--crittxt)'):'var(--ink)'},g);
+    v.textContent=(s.k==='final'?(s.v>=0?'▲ ':'▼ '):'')+brlK(s.v);
+    if(i<steps.length-1 && steps[i+1].k==='delta') svgEl('line',{x1:x(s.to),x2:x(s.to),y1:y+rowH-6,y2:y+rowH+6,stroke:'var(--rule2)','stroke-width':1},svg);
+    g.addEventListener('mousemove',e=>showTip(e,`<b>${s.l}</b><br><span class="num">${brl(s.v)}</span>${a.attr?` · ${pct(Math.abs(s.v)/a.attr,1)} do GMV atribuído`:''}`));
+    g.addEventListener('mouseleave',hideTip);
+    g.addEventListener('click',()=>openDrill(`${s.l} · ${sliceLabel()}`, rows.filter(r=>spendDe(r)>0)));
+  });
+}
+
+/* ---------- §2 experiment small multiples ---------- */
+let multDone=false;
+function renderMultiples(){
+  const host=document.getElementById('multiples');
+  if(!multDone){
+    multDone=true;
+    const days=[...new Set(ROWS.map(r=>r[DAY]))].sort((a,b)=>a-b), d0=days[0];
+    D.channels.forEach((c,ch)=>{
+      const sums=[new Float64Array(days.length), new Float64Array(days.length)];
+      for(const r of ROWS) if(r[CH]===ch) sums[r[ARM]][r[DAY]-d0]+=r[GROSS];
+      const idx=sums.map(arr=>{ const preN=TS-d0; let m=0; for(let i=0;i<preN;i++) m+=arr[i]; m/=preN;
+        return Array.from(arr,(v,i)=>{ if(i<6) return null; let s=0; for(let j=i-6;j<=i;j++) s+=arr[j]; return 100*s/7/m; }); });
+      const ex=EXP[ch], sq=D.sql.exp[c.id], tr=D.truth[c.id];
+      const inI = tr.true_iroas>=ex.iroasLo && tr.true_iroas<=ex.iroasHi;
+      const box=document.createElement('div'); box.className='mult'; box.dataset.ch=ch;
+      box.innerHTML=`<h3><span class="sw" style="width:10px;height:10px;border-radius:50%;background:${CHVAR[ch]};display:inline-block"></span>${esc(c.label)}</h3>`;
+      const W=270,H=150,L=30,Rr=6,T=10,B=22, vals=idx.flat().filter(v=>v!=null);
+      const lo=Math.floor(Math.min(...vals)/10)*10, hi=Math.ceil(Math.max(...vals)/10)*10;
+      const x=i=>L+(W-L-Rr)*i/(days.length-1), y=v=>T+(H-T-B)*(1-(v-lo)/(hi-lo));
+      const svg=svgEl('svg',{viewBox:`0 0 ${W} ${H}`,width:'100%',role:'img','aria-label':`Índice de GMV, ads ligados e apagados, ${c.label}`},box);
+      for(let v=lo; v<=hi; v+=Math.max(10,Math.round((hi-lo)/40)*10)){ svgEl('line',{x1:L,x2:W-Rr,y1:y(v),y2:y(v),stroke:'var(--rule)'},svg);
+        const t=svgEl('text',{x:L-4,y:y(v)+3,'text-anchor':'end','font-size':9.5,class:'mono'},svg); t.textContent=v; }
+      const xi=TS-d0; svgEl('rect',{x:x(xi),y:T,width:x(days.length-1)-x(xi),height:H-T-B,fill:'var(--wash)'},svg);
+      const tl=svgEl('text',{x:x(xi)+4,y:T+11,'font-size':9.5},svg); tl.textContent='teste';
+      ['01/05','01/07','17/08','30/09'].forEach(lbl=>{ const i=days.findIndex(dd=>dstr(dd)===lbl); if(i<0) return;
+        const t=svgEl('text',{x:x(i),y:H-6,'text-anchor':i===0?'start':i===days.length-1?'end':'middle','font-size':9.5,class:'mono'},svg); t.textContent=lbl; });
+      [0,1].forEach(arm=>{ let dd=''; idx[arm].forEach((v,i)=>{ if(v==null) return; dd+=(dd?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1); });
+        svgEl('path',{d:dd,fill:'none',stroke:arm?CHVAR[ch]:'var(--off)','stroke-width':2,'stroke-linejoin':'round'},svg); });
+      const cross=svgEl('line',{y1:T,y2:H-B,stroke:'var(--ink3)','stroke-width':1,opacity:0},svg);
+      const hit=svgEl('rect',{x:L,y:T,width:W-L-Rr,height:H-T-B,fill:'transparent',class:'hit'},svg);
+      hit.addEventListener('mousemove',e=>{ const bb=svg.getBoundingClientRect(), px=(e.clientX-bb.left)*W/bb.width;
+        const i=Math.max(6,Math.min(days.length-1,Math.round((px-L)/(W-L-Rr)*(days.length-1)))); cross.setAttribute('x1',x(i)); cross.setAttribute('x2',x(i)); cross.setAttribute('opacity',1);
+        showTip(e,`<b>${c.label} · ${dstr(days[i])}</b><br>Ligados <span class="num">${NF0.format(idx[0][i])}</span><br>Apagados <span class="num">${NF0.format(idx[1][i])}</span><br><span style="opacity:.75">média de 7 dias, pré-teste = 100</span>`); });
+      hit.addEventListener('mouseleave',()=>{ cross.setAttribute('opacity',0); hideTip(); });
+      hit.addEventListener('click',()=>openDrill(`${c.label} · grupo apagado no teste`, ROWS.filter(r=>r[CH]===ch && r[ARM]===1 && r[DAY]>=TS), 'SKUs com ads desligados desde 17/08. Investimento zero por desenho, não por falta de dado.'));
+      const rd=document.createElement('div'); rd.className='read';
+      rd.innerHTML=`ROAS que a plataforma daria: <span class="num">${xr(ex.acf/ex.scf)}</span><br>iROAS medido: <span class="num">${xr(ex.iroas)}</span> <span style="color:var(--ink3)">(IC ${NF2.format(ex.iroasLo)} a ${NF2.format(ex.iroasHi)})</span><br>Fatia incremental k: <span class="num">${pct(ex.k)}</span> <span style="color:var(--ink3)">(${pct(ex.kLo)} a ${pct(ex.kHi)})</span><br>`+
+        `<span class="badge" title="Valor que o gerador plantou na base sintética">${inI?'✓':'✕'} verdade plantada ${xr(tr.true_iroas)} ${inI?'dentro':'fora'} do IC</span>`;
+      box.appendChild(rd); host.appendChild(box);
+    });
+  }
+  host.querySelectorAll('.mult').forEach(b=>b.classList.toggle('dim', !state.ch.has(+b.dataset.ch)));
+}
+
+/* ---------- §3 matrix ---------- */
+let mQuery='';
+document.getElementById('mSearch').addEventListener('input',e=>{ mQuery=e.target.value.toLowerCase(); renderMatrix(); });
+function renderMatrix(){
+  const chs=[...state.ch].sort((a,b)=>a-b);
+  let skus=D.skus.map((s,i)=>i).filter(i=>state.cat.has(D.skus[i].cat));
+  if(mQuery) skus=skus.filter(i=>(D.skus[i].name+' '+D.skus[i].id+' '+D.cats[D.skus[i].cat]).toLowerCase().includes(mQuery));
+  const E={}; skus.forEach(s=>chs.forEach(ch=>E[ch+'|'+s]=econDe(ch,s)));
+  const tot=s=>chs.reduce((t,ch)=>t+E[ch+'|'+s].profit,0);
+  skus.sort((a,b)=>tot(a)-tot(b));
+  const tbl=document.getElementById('matrix');
+  let h=`<thead><tr><th>SKU</th>${chs.map(ch=>`<th><span class="sw" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${CHVAR[ch]};margin-right:5px"></span>${esc(chName(ch))}</th>`).join('')}<th class="tprofit">Lucro incr.</th></tr></thead><tbody>`;
+  for(const s of skus){
+    const sk=D.skus[s];
+    h+=`<tr><td class="sku"><div class="n">${esc(sk.name)}</div><div class="c mono">${esc(sk.id)} · ${esc(D.cats[sk.cat])}</div></td>`;
+    for(const ch of chs){
+      const e=E[ch+'|'+s], v=VERD[e.verdict];
+      const range = e.beLo!=null ? ` <span style="color:var(--ink3)">(${NF1.format(e.beLo)}–${e.beHi!=null?NF1.format(e.beHi):'∞'})</span>` : '';
+      h+=`<td><div class="cell" data-ch="${ch}" data-s="${s}" tabindex="0"><span class="vchip v-${e.verdict}"><i>${v.i}</i>${v.l}</span>`+
+         `<div class="nums">real ${xr(e.roas,1)} · mín. ${e.be!=null?xr(e.be,1):'—'}${range}</div>`+
+         (e.below?`<div class="flag">⚑ meta atual ${xr(e.tgt,1)}</div>`:'')+`</div></td>`;
+    }
+    const t=tot(s); h+=`<td class="tprofit mono ${t>=0?'pos':'neg'}">${signK(t)}</td></tr>`;
+  }
+  tbl.innerHTML=h+'</tbody>';
+  const cells=Object.values(E);
+  document.getElementById('mCount').textContent=`${skus.length} SKUs · ${cells.filter(c=>c.verdict==='lucra').length} combinações lucram, ${cells.filter(c=>c.verdict==='queima'||c.verdict==='margem_negativa').length} queimam margem`;
+  tbl.querySelectorAll('.cell').forEach(el=>{
+    const ch=+el.dataset.ch, s=+el.dataset.s, e=E[ch+'|'+s];
+    const open=()=>openDrill(`${D.skus[s].name} · ${chName(ch)}`, ROWS.filter(r=>r[CH]===ch && r[SKU]===s),
+      `Margem ${pct(e.cm,1)} · k ${pct(K[ch])} · ROAS real ${xr(e.roas)} · equilíbrio ${e.be!=null?xr(e.be):'sem equilíbrio (margem negativa)'} · meta atual ${e.tgt!=null?xr(e.tgt,1):'sem meta'} (${e.tgtSrc}) → ${e.action}`);
+    el.onclick=open; el.onkeydown=ev=>{ if(ev.key==='Enter') open(); };
+    el.onmousemove=ev=>showTip(ev,`<b>${esc(D.skus[s].name)} · ${chName(ch)}</b><br>Margem de contribuição <span class="num">${pct(e.cm,1)}</span><br>ROAS real <span class="num">${xr(e.roas)}</span> · equilíbrio <span class="num">${e.be!=null?xr(e.be):'n/d'}</span><br>Lucro incremental <span class="num">${brl(e.profit)}</span><br><i>${esc(e.action)}</i>`);
+    el.onmouseleave=hideTip;
+  });
+}
+
+/* ---------- §4 ROI protection ---------- */
+const RSTAT=[{v:'roi_acima_de_90pct',l:'ROI ≥ 90% da meta (sem crédito)'},{v:'ate_20_pedidos',l:'Até 20 pedidos no dia'},{v:'meta_editada_no_dia',l:'Meta editada manualmente no dia'},{v:'elegivel',l:'Elegível: crédito emitido'}];
+let roiDone=false;
+function renderRoi(){
+  document.getElementById('secRoi').classList.toggle('dim', !state.ch.has(0));
+  if(roiDone) return; roiDone=true;
+  const rp=D.sql.roiProt, host=document.getElementById('roiBars');
+  const cnt=RSTAT.map(s=>({...s, rows:rp.filter(r=>r.protection_status===s.v)}));
+  const max=Math.max(...cnt.map(c=>c.rows.length)), W=520, L=230, R=60, rowH=34;
+  const svg=svgEl('svg',{viewBox:`0 0 ${W} ${rowH*cnt.length+6}`,width:'100%',role:'img','aria-label':'Dias-campanha por situação de ROI protection'},host);
+  cnt.forEach((c,i)=>{ const y=i*rowH+4, g=svgEl('g',{class:'hit'},svg);
+    svgEl('rect',{x:0,y,width:W,height:rowH,fill:'transparent'},g);
+    const t=svgEl('text',{x:0,y:y+rowH/2+4,'font-size':12.5,fill:c.v==='elegivel'?'var(--ink)':'var(--ink2)','font-weight':c.v==='elegivel'?600:400},g); t.textContent=c.l;
+    svgEl('rect',{x:L,y:y+8,width:Math.max(2,(W-L-R)*c.rows.length/max),height:rowH-16,rx:2,fill:c.v==='elegivel'?'var(--ink2)':'var(--muted)'},g);
+    const v=svgEl('text',{x:W-2,y:y+rowH/2+4,'text-anchor':'end','font-size':12,class:'mono'},g); v.textContent=c.rows.length+' dias';
+    g.addEventListener('click',()=>openCampaignDrill(c.l, c.rows)); });
+  const credit=rp.reduce((s,r)=>s+r.credit_statement,0), cost=rp.reduce((s,r)=>s+r.cost,0), re=rp.reduce((s,r)=>s+r.credit_recomputed,0);
+  const edits=cnt.find(c=>c.v==='meta_editada_no_dia').rows;
+  const lost=edits.reduce((s,r)=>s+Math.max(0, r.orders>20 && r.roi<0.9*r.target_roi ? r.cost-r.gross_revenue/(r.target_roi*0.9) : 0),0);
+  document.getElementById('roiNote').innerHTML=`<div class="kpi" style="cursor:default"><div class="l">Créditos recebidos</div><div class="v num">${brlK(credit)}</div><div class="s">${pct(credit/cost,1)} do investimento no TikTok Shop · recalculado no SQL: ${brlK(re)}</div></div>
+    <p style="font-size:14px;color:var(--ink2);margin:14px 0 0">Em <b>${edits.length} dias</b> o time mexeu na meta manualmente, o que anula a proteção daquele dia. Se esses dias tivessem ficado sem edição, a regra teria devolvido mais <b>${brlK(lost)}</b>.</p>
+    <p class="howto" style="margin-top:12px"><b>Ressalva:</b> a regra replica a documentação do TikTok (atualizada em jun/2026). Ela tem exceções que não estão na base (orçamentos de Max delivery, impulsionamento de criativo, dias com edição de produto), então o número real depende do extrato da conta.</p>`;
+}
+
+/* ---------- drill modal ---------- */
+const COLS=[
+  {h:'Data', f:r=>dstr(r[DAY])},
+  {h:'Canal', f:r=>chName(r[CH])},
+  {h:'SKU', f:r=>D.skus[r[SKU]].name},
+  {h:'Grupo', f:r=>r[ARM]?'apagado':'ligado'},
+  {h:'Pedidos', f:r=>NF0.format(r[ORD]), r:1},
+  {h:'GMV (OMS)', f:r=>brl(r[GROSS]), r:1},
+  {h:'Investimento', f:r=>{const s=spendDe(r); return s==null?'sem medida':brl(s);}, r:1},
+  {h:'GMV atribuído', f:r=>{const a=attrDe(r); return a==null?'sem medida':brl(a);}, r:1},
+  {h:'ROAS dia', f:r=>{const s=spendDe(r); return s>0?xr(attrDe(r)/s,1):'—';}, r:1},
+  {h:'Lucro incr.', f:r=>{const l=lucroDe(r); return l==null?'sem medida':brl(l);}, r:1},
+];
+let mRows=[], mCols=COLS, mTitle='';
+const bg=document.getElementById('modalBg');
+function openDrill(title, rows, note){
+  mCols=COLS; mTitle=title;
+  mRows=[...rows].sort((a,b)=>{ const A=lucroDe(a), B=lucroDe(b); return (A==null?1e12:A)-(B==null?1e12:B); });
+  showModal(title, note||'Ordenado do pior para o melhor lucro incremental estimado do dia.');
+}
+function openCampaignDrill(title, rows){
+  const camp={}; D.sql.campaigns.forEach(c=>camp[c.campaign_id]=c.category);
+  mCols=[{h:'Data',f:r=>r.ad_date.slice(8,10)+'/'+r.ad_date.slice(5,7)},{h:'Campanha',f:r=>'GMV Max · '+camp[r.campaign_id]},{h:'Custo',f:r=>brl(r.cost),r:1},
+    {h:'Receita bruta',f:r=>brl(r.gross_revenue),r:1},{h:'Pedidos',f:r=>r.orders,r:1},{h:'ROI',f:r=>xr(r.roi),r:1},{h:'Meta',f:r=>xr(r.target_roi,1),r:1},
+    {h:'Edições',f:r=>r.manual_target_roi_edits,r:1},{h:'Crédito (extrato)',f:r=>brl(r.credit_statement),r:1},{h:'Crédito (SQL)',f:r=>brl(r.credit_recomputed),r:1}];
+  mTitle='ROI protection · '+title;
+  mRows=[...rows].sort((a,b)=>(a.roi/a.target_roi)-(b.roi/b.target_roi));
+  showModal(mTitle,'Dias-campanha do TikTok Shop GMV Max, do mais distante da meta para o mais próximo.');
+}
+function showModal(title, note){
+  document.getElementById('mTitle').textContent=title; document.getElementById('mNote').textContent=note;
+  document.getElementById('mFind').value=''; renderModal(''); bg.hidden=false; hideTip(); document.getElementById('mFind').focus();
+}
+function rowText(r){ return mCols.map(c=>c.f(r)).join(' ').toLowerCase(); }
+function filteredModalRows(q){ return q? mRows.filter(r=>rowText(r).includes(q)) : mRows; }
+function renderModal(q){
+  const rs=filteredModalRows(q), cap=300;
+  let h=`<thead><tr>${mCols.map(c=>`<th${c.r?' class="r"':''}>${c.h}</th>`).join('')}</tr></thead><tbody>`;
+  for(const r of rs.slice(0,cap)) h+=`<tr>${mCols.map(c=>`<td${c.r?' class="r mono"':''}>${esc(c.f(r))}</td>`).join('')}</tr>`;
+  document.getElementById('mTable').innerHTML=h+'</tbody>';
+  document.getElementById('mFoot').textContent = rs.length>cap ? `Mostrando ${cap} de ${NF0.format(rs.length)} linhas. Use a busca ou baixe o CSV para ver todas.` : `${NF0.format(rs.length)} linhas.`;
+}
+function closeModal(){ bg.hidden=true; }
+document.getElementById('mFind').addEventListener('input',e=>renderModal(e.target.value.toLowerCase()));
+document.getElementById('mClose').onclick=closeModal;
+bg.addEventListener('click',e=>{ if(e.target===bg) closeModal(); });
+addEventListener('keydown',e=>{ if(e.key==='Escape' && !bg.hidden) closeModal(); });
+document.getElementById('mCsv').onclick=()=>{
+  const rs=filteredModalRows(document.getElementById('mFind').value.toLowerCase());
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv='﻿'+[mCols.map(c=>q(c.h)).join(';'), ...rs.map(r=>mCols.map(c=>q(c.f(r))).join(';'))].join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=mTitle.toLowerCase().normalize('NFD').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'')+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+};
+
+/* ---------- §5 cross-check SQL x JS, pipeline checks, cleaning ---------- */
+const XCHECK=[];
+function renderStatic(){
+  const tbl=document.getElementById('xcheck'); const lines=[];
+  const add=(what,sqlV,jsV,fmt,tol)=>{ const ok=Math.abs(sqlV-jsV)<=tol; XCHECK.push({what,ok}); lines.push(`<tr><td>${what}</td><td class="r mono">${fmt(sqlV)}</td><td class="r mono">${fmt(jsV)}</td><td class="${ok?'ok':'ko'}">${ok?'OK':'Fora'}</td></tr>`); };
+  D.channels.forEach((c,ch)=>{
+    const s=D.sql.score[c.id], x=D.sql.exp[c.id], a=agg(ROWS.filter(r=>r[CH]===ch)), ex=EXP[ch];
+    lines.push(`<tr><td colspan="4" style="font-weight:600;padding-top:12px;color:var(--ink)">${c.label}</td></tr>`);
+    add('Investimento', s.spend, a.spend, brl, 0.05);
+    add('GMV atribuído', s.attributed, a.attr, brl, 0.05);
+    add('iROAS do experimento', x.iroas, ex.iroas, v=>xr(v,4), 1e-9);
+    add('IC do iROAS (limite inferior)', x.iroas_lo, ex.iroasLo, v=>xr(v,4), 1e-9);
+    add('k (fatia incremental)', x.k, ex.k, v=>pct(v,3), 1e-9);
+    add('Lucro incremental', s.incremental_profit, a.profit, brl, 0.5);
+  });
+  let same=0; for(const e of D.sql.econ){ const ch=D.channels.findIndex(c=>c.id===e.channel), s=D.skus.findIndex(k=>k.id===e.sku_id); if(econDe(ch,s).verdict===e.verdict) same++; }
+  lines.push(`<tr><td colspan="4" style="font-weight:600;padding-top:12px;color:var(--ink)">Geral</td></tr>`);
+  add('Vereditos SKU × canal iguais', D.sql.econ.length, same, v=>NF0.format(v)+' / '+D.sql.econ.length, 0);
+  add('Créditos de ROI protection', D.sql.roiProt.reduce((t,r)=>t+r.credit_statement,0), ROWS.reduce((t,r)=>t+r[CRED],0), brl, 0.05);
+  add('Receita bruta total (carimbo)', D.sql.totals.gross, RUNTIME_GROSS, brl, 0.5);
+  tbl.innerHTML=`<thead><tr><th>Métrica</th><th class="r">SQL</th><th class="r">Navegador</th><th></th></tr></thead><tbody>${lines.join('')}</tbody>`;
+
+  const fam={A:'Integridade',B:'Lógica e casos-teste',C:'Recuperação da verdade plantada'};
+  const v=D.validation, okN=v.filter(x=>x.ok).length;
+  let vh=`<p style="margin:0 0 6px;font-size:14px"><b class="${okN===v.length?'ok':'ko'}">${okN}/${v.length}</b> checagens passaram no último build.</p>`;
+  for(const f of 'ABC'){ const it=v.filter(x=>x.family===f);
+    vh+=`<details${f==='C'?' open':''}><summary>${fam[f]} (${it.filter(x=>x.ok).length}/${it.length})</summary><table class="tbl">${it.map(x=>`<tr><td class="${x.ok?'ok':'ko'}">${x.ok?'✓':'✕'}</td><td>${esc(x.name)}<div style="font-size:12px;color:var(--ink3)">${esc(x.detail)}</div></td></tr>`).join('')}</table></details>`; }
+  document.getElementById('valid').innerHTML=vh;
+
+  document.getElementById('cleaning').innerHTML=`<thead><tr><th>Fonte</th><th>Regra</th><th class="r">Entrada</th><th class="r">Saída</th></tr></thead><tbody>`+
+    D.sql.cleaning.map(c=>`<tr><td>${esc(chName(D.channels.findIndex(x=>x.id===c.channel)))}</td><td>${esc(c.rule)}</td><td class="r mono">${NF0.format(c.rows_in)}</td><td class="r mono">${NF0.format(c.rows_out)}</td></tr>`).join('')+'</tbody>';
+
+  const allOk = XCHECK.every(x=>x.ok);
+  document.getElementById('metaline').innerHTML=
+    `<span><b>Ondina Skincare</b> (marca fictícia)</span><span>01/05 a 30/09/2026 · teste a partir de 17/08</span><span>4 marketplaces · 40 SKUs · ${NF0.format(ROWS.length)} linhas dia × canal × SKU</span>`+
+    `<span class="stamp${STAMP_OK&&allOk?'':' bad'}" title="sha256 da base embutida; SQL × navegador ${allOk?'conferem':'divergem'}">build ${D.meta.fp} · ${STAMP_OK&&allOk?'conferido':'DIVERGENTE'}</span>`;
+}
+
+renderStatic();
+render();
+</script>
+</body>
+</html>

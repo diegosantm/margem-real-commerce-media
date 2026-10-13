@@ -1,0 +1,6 @@
+warehouse/*.duckdb
+warehouse/*.wal
+__pycache__/
+*.pyc
+.DS_Store
+.venv/

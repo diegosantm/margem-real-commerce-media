@@ -1,0 +1,206 @@
+[
+ {
+  "family": "A",
+  "name": "Grão único dia x canal x SKU",
+  "ok": true,
+  "detail": "24,480 linhas, 24,480 chaves distintas, esperado 24,480"
+ },
+ {
+  "family": "A",
+  "name": "De-para de anúncios sem ID externo repetido",
+  "ok": true,
+  "detail": "0 IDs externos apontando para mais de um SKU"
+ },
+ {
+  "family": "A",
+  "name": "Uma linha de ads por dia x canal x SKU",
+  "ok": true,
+  "detail": "0 chaves repetidas em stg_ads"
+ },
+ {
+  "family": "A",
+  "name": "Todo anúncio mapeado para um SKU",
+  "ok": true,
+  "detail": "0 linhas de ads sem SKU"
+ },
+ {
+  "family": "A",
+  "name": "OMS integral no fato (receita bruta)",
+  "ok": true,
+  "detail": "CSV R$ 20,010,511.22 = fato"
+ },
+ {
+  "family": "A",
+  "name": "Shopee: duplicatas do re-download removidas",
+  "ok": true,
+  "detail": "5,340 linhas brutas -> 5,220 (120 duplicadas em 3 dias sobrepostos)"
+ },
+ {
+  "family": "A",
+  "name": "Shopee: duplicatas eram cópias idênticas",
+  "ok": true,
+  "detail": "nenhuma divergência de valores entre as cópias"
+ },
+ {
+  "family": "A",
+  "name": "Mercado Ads: parsing de vírgula decimal e data BR",
+  "ok": true,
+  "detail": "pandas R$ 366,991.96 | SQL R$ 366,991.96"
+ },
+ {
+  "family": "A",
+  "name": "Mercado Ads: SKUs com 2 anúncios MLB consolidados",
+  "ok": true,
+  "detail": "3 SKUs com mais de um MLB"
+ },
+ {
+  "family": "A",
+  "name": "Amazon: dias sem export viram 'sem medida'",
+  "ok": true,
+  "detail": "dias sem medida: 2026-07-03, 2026-07-04"
+ },
+ {
+  "family": "A",
+  "name": "'Sem medida' nunca vira zero",
+  "ok": true,
+  "detail": "0 linhas sem medida com valor preenchido"
+ },
+ {
+  "family": "A",
+  "name": "Grupo apagado sem gasto nem atribuição no teste",
+  "ok": true,
+  "detail": "soma = 0.0"
+ },
+ {
+  "family": "A",
+  "name": "Grupo ligado com gasto em todo dia medido",
+  "ok": true,
+  "detail": "0 dias medidos sem gasto"
+ },
+ {
+  "family": "A",
+  "name": "Balanceamento dos grupos no pré-teste (±10%)",
+  "ok": true,
+  "detail": "Amazon: 0,958 | Mercado Livre: 0,965 | Shopee: 1,002 | TikTok Shop: 1,008"
+ },
+ {
+  "family": "B",
+  "name": "TikTok: coluna roi = receita bruta / custo",
+  "ok": true,
+  "detail": "maior desvio 0.0000"
+ },
+ {
+  "family": "B",
+  "name": "ROI protection recalculado bate com o extrato",
+  "ok": true,
+  "detail": "156 dias-campanha com crédito no SQL, 156 no extrato, maior diferença R$ 0.00"
+ },
+ {
+  "family": "B",
+  "name": "Crédito nunca maior que o custo do dia",
+  "ok": true,
+  "detail": "0 violações"
+ },
+ {
+  "family": "B",
+  "name": "Rateio de créditos por SKU fecha com o total",
+  "ok": true,
+  "detail": "diferença R$ 0.0000"
+ },
+ {
+  "family": "B",
+  "name": "Cascata fecha: soma dos degraus = lucro incremental",
+  "ok": true,
+  "detail": "Amazon: R$ 27.975 | Mercado Livre: R$ -69.680 | TikTok Shop: R$ -72.616 | Shopee: R$ -17.085"
+ },
+ {
+  "family": "B",
+  "name": "Identidade do break-even: ROAS x k x cm = 1",
+  "ok": true,
+  "detail": "maior desvio 2.22e-16"
+ },
+ {
+  "family": "B",
+  "name": "Custos + margem somam 100% da receita",
+  "ok": true,
+  "detail": "maior desvio 2.44e-15"
+ },
+ {
+  "family": "B",
+  "name": "Investimento total = soma dos 4 exports (independente)",
+  "ok": true,
+  "detail": "marts R$ 1,139,552.63 | CSVs R$ 1,139,552.63"
+ },
+ {
+  "family": "B",
+  "name": "Caso-teste: Break-even: cm 25%, k 0,40",
+  "ok": true,
+  "detail": "calculado 10.00, esperado à mão 10.00"
+ },
+ {
+  "family": "B",
+  "name": "Caso-teste: Crédito ROI protection: custo 1.000, receita 4.000, meta 5,0",
+  "ok": true,
+  "detail": "calculado 111.11, esperado à mão 111.11"
+ },
+ {
+  "family": "B",
+  "name": "Caso-teste: ACOS máximo: cm 30%, k 0,50",
+  "ok": true,
+  "detail": "calculado 0.15, esperado à mão 0.15"
+ },
+ {
+  "family": "B",
+  "name": "Caso-teste: estimador DiD em exemplo de 2 SKUs",
+  "ok": true,
+  "detail": "calculado 1.50, esperado 1,50"
+ },
+ {
+  "family": "C",
+  "name": "Amazon: iROAS verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 3,68 | estimado 3,74 [2,74; 4,74]"
+ },
+ {
+  "family": "C",
+  "name": "Amazon: k verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 0,687 | estimado 0,688 [0,526; 0,850]"
+ },
+ {
+  "family": "C",
+  "name": "Mercado Livre: iROAS verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 3,17 | estimado 3,31 [2,47; 4,16]"
+ },
+ {
+  "family": "C",
+  "name": "Mercado Livre: k verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 0,546 | estimado 0,571 [0,435; 0,708]"
+ },
+ {
+  "family": "C",
+  "name": "Shopee: iROAS verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 2,48 | estimado 2,94 [2,24; 3,64]"
+ },
+ {
+  "family": "C",
+  "name": "Shopee: k verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 0,515 | estimado 0,604 [0,485; 0,723]"
+ },
+ {
+  "family": "C",
+  "name": "TikTok Shop: iROAS verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 1,99 | estimado 2,25 [1,52; 2,98]"
+ },
+ {
+  "family": "C",
+  "name": "TikTok Shop: k verdadeiro dentro do IC 95%",
+  "ok": true,
+  "detail": "verdade 0,377 | estimado 0,410 [0,297; 0,522]"
+ }
+]

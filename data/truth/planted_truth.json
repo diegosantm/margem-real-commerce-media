@@ -1,0 +1,29 @@
+{
+  "note": "Generator ground truth for the dark SKUs during the test window. Used only by validation (recovery test).",
+  "channels": {
+    "tiktok_shop": {
+      "true_iroas": 1.99,
+      "true_incrementality_k": 0.3773,
+      "param_r": 1.9,
+      "param_c": 0.4
+    },
+    "mercado_livre": {
+      "true_iroas": 3.168,
+      "true_incrementality_k": 0.5463,
+      "param_r": 3.2,
+      "param_c": 0.18
+    },
+    "shopee": {
+      "true_iroas": 2.4804,
+      "true_incrementality_k": 0.5148,
+      "param_r": 2.4,
+      "param_c": 0.22
+    },
+    "amazon": {
+      "true_iroas": 3.6839,
+      "true_incrementality_k": 0.6866,
+      "param_r": 3.6,
+      "param_c": 0.15
+    }
+  }
+}
